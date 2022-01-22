@@ -1,7 +1,7 @@
 import flask
 from datetime import timedelta 
 from crypt import methods
-from flask import jsonify, session, render_template,request, url_for
+from flask import jsonify, session, render_template,request, url_for, redirect
 import mysql.connector
 
 app = flask.Flask(__name__)
@@ -35,16 +35,22 @@ def login():
   elif request.method == "POST":
     email = request.form.get("email")
     password = request.form.get("password")
+    
+    # データベースへ接続
     conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
     app.logger.info("MySQLConnectionInfo: %s", conn.is_connected())
-    # cursor.execute("select * from user")
-    # rows = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    # print(rows)
+
+    if conn.is_connected() == True:
+      cursor = conn.cursor()
+      cursor.execute("select * from user")
+      rows = cursor.fetchall()
+      cursor.close()
+      conn.close()
+      print(rows)
+    
     return render_template("login.html", title=email, name=password)
 
+# 登録画面
 @app.route("/regist_user", methods=["GET", "POST"])
 def regist_user():
   if request.method == "GET":
@@ -53,14 +59,19 @@ def regist_user():
     username = request.form.get("username")
     email = request.form.get("email")
     password = request.form.get("password")
-    sql = "insert into user(username, email, password) values(%s, %s, %s);"
+    
     conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
-    cursor.executemany(sql, [(username, email, password)])
-    cursor.commit()
-    cursor.close()
-    conn.close()
-    return 
+    if conn.is_connected() == True:
+      try:
+        sql = "insert into user(username, email, password) values(%s, %s, %s);"
+        cursor = conn.cursor()
+        cursor.executemany(sql, [(username, email, password)])
+        conn.commit()
+        cursor.close()
+        conn.close()
+      except mysql.connector.Error as err:
+        print("Something went wrong: {}".format(err))
+    return redirect(url_for("login"))
 
 
 # topページ
@@ -77,7 +88,3 @@ def top():
 # init
 if __name__ == "__main__":
   app.run(host="0.0.0.0", port=80, debug=True)
-  # 再接続する
-  # conn.ping(reconnect=True)
-  # 接続確認
-  # print(conn.is_connected())
