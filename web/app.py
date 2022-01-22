@@ -18,7 +18,6 @@ app.permanent_session_lifetime = timedelta(minutes=60)
 # port='3306',
 # user='guest',
 # password='1qazaq!',
-# database='project_db'
 db_config = {
   'host': 'mysql-service',
   'user': 'guest',
