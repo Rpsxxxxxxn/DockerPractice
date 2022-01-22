@@ -24,7 +24,7 @@ db_config = {
 # root処理
 @app.route("/", methods=["GET"])
 def index():
-  return "<h1>ようこそ</h1>"
+  return redirect(url_for("login"))
 
 # login処理
 @app.route("/login", methods=["GET", "POST"])
@@ -41,14 +41,22 @@ def login():
     app.logger.info("MySQLConnectionInfo: %s", conn.is_connected())
 
     if conn.is_connected() == True:
-      cursor = conn.cursor()
-      cursor.execute("select * from user")
-      rows = cursor.fetchall()
-      cursor.close()
-      conn.close()
-      print(rows)
+      try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM user WHERE email = %s AND password = %s", [email, password])
+        row = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        print(row)
+        if row is not None:
+          session["user"] = row
+          print("logined")
+          return redirect(url_for("top"))
+      except mysql.connector.Error as err:
+        print("Something went wrong: {}".format(err))
+        return render_template("login.html", message="エラーが発生しました。")
     
-    return render_template("login.html", title=email, name=password)
+    return render_template("login.html")
 
 # 登録画面
 @app.route("/regist_user", methods=["GET", "POST"])
@@ -71,6 +79,7 @@ def regist_user():
         conn.close()
       except mysql.connector.Error as err:
         print("Something went wrong: {}".format(err))
+        return render_template("regist_user.html", message="エラーが発生しました。")
     return redirect(url_for("login"))
 
 
@@ -78,12 +87,31 @@ def regist_user():
 @app.route("/top", methods=["GET"])
 def top():
   if request.method == "GET":
-    conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
-    cursor.connect()
-    cursor.close()
-    conn.close()
-    return render_template("top.html")
+    if session["user"] is not None:  
+      conn = mysql.connector.connect(**db_config)
+      cursor = conn.cursor()
+      cursor.close()
+      conn.close()
+      return render_template("top.html")
+    else:
+      return redirect(url_for("error_page"))
+
+# ログアウト
+@app.route("/logout", methods=["GET", "POST"])
+def logout():
+  if request.method == "GET":
+    if session["user"] is not None:
+      app.logger.info("[INFO] User: %s Logout", session["user"].email)
+      session["user"] = None
+      return redirect(url_for("login"))
+    else:
+      return redirect(url_for("login"))
+
+# エラーページ
+@app.route("/error", methods=["GET"])
+def error_page():
+  if request.method == "GET":
+    return render_template("error.index")
 
 # init
 if __name__ == "__main__":
