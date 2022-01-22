@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="card mx-auto my-5" style="max-width:350px">
+    <div class="card-body">
+        <div class="card-title">ユーザ登録</div>
+        <form action="/regist_user" method="POST">
+            <div class="mb-3">
+                <input type="username" class="form-control" id="username" name="username" placeholder="username">
+            </div>
+            <div class="mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email address">
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">ログイン</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

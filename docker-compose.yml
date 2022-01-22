@@ -1,0 +1,46 @@
+# バージョン（プロジェクト）
+version: '3'
+services:
+  # バックエンドサービス
+  mysql-service:
+    # 使用するサービス
+    image: mysql
+    # コンテナ名
+    container_name: mysql-container
+    # M1チップだと通常盤は使えないため指定
+    platform: linux/amd64
+    build: ./mysql
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/sql:/docker-entrypoint-initdb.d
+    # 環境変数
+    environment:
+      MYSQL_DATABASE: project_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: guest
+      MYSQL_PASSWORD: 1qazaq!
+    # ポートをバインド
+    ports:
+      - "3306:3306"
+    networks:
+      - app-networks
+  # WEB側のサービス
+  web-service:
+    # ビルドする場所
+    build: ./web
+    # コンテナ名
+    container_name: flask-container
+    # ローカル環境とコンテナ内環境を繋ぐもの
+    volumes:
+      - ./web:/code
+    # ポートを5000でバインド
+    ports:
+      - "5001:80"
+    networks:
+      - app-networks
+
+# ネットワーク設定
+# コンテナ同士を繋ぎ合わせるもの
+networks:
+  app-networks:
+    driver: bridge

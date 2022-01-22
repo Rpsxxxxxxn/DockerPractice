@@ -1,0 +1,6 @@
+FROM python:alpine
+ADD . /code
+WORKDIR /code
+ENV PYTHONUNBUFFERED 1
+RUN pip install flask && pip install werkzeug && pip install mysql-connector-python
+CMD ["python", "app.py"]
