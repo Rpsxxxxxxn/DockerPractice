@@ -68,8 +68,6 @@ def login():
     finally:
       cursor.close()
       conn.close()
-    
-    return render_template("login.html", message="")
 
 # 登録画面
 @app.route("/regist_user", methods=["GET", "POST"])
@@ -157,7 +155,6 @@ def logout():
 def error_page():
   if request.method == "GET":
     return redirect(url_for("login"))
-    # return render_template("error.html")
 
 # 投稿ページ
 @app.route("/post", methods=["GET", "POST"])
