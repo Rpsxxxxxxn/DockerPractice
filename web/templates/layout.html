@@ -10,13 +10,14 @@
 <body>
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1">JimaLin</span>
+            <a class="navbar-brand mb-0 h1" href="{{ url_for('top') }}">JimaLin</a>
             <form class="d-flex">
-                {% if session["user"] == None %}
+                {% if "user" in session %}
+                <a type="button" class="mx-2 btn btn-secondary" href="{{ url_for('post') }}">投稿</a>
+                <a type="button" class="mx-2 btn btn-secondary" href="{{ url_for('logout') }}">ログアウト</a>
+                {% else %}
                 <a type="button" class="mx-2 btn btn-light" href="{{ url_for('regist_user') }}">新規登録</a>
                 <a type="button" class="mx-2 btn btn-secondary" href="{{ url_for('login') }}">ログイン</a>
-                {% else %}
-                <a type="button" class="mx-2 btn btn-secondary" href="{{ url_for('logout') }}">ログアウト</a>
                 {% endif %}
             </form>
         </div>

@@ -1,8 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="card mx-auto my-5" style="max-width:350px">
+    <h5 class="card-header">ログイン</h5>
     <div class="card-body">
-        <div class="card-title">ログイン</div>
+        {% if message != "" %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
         <form action="{{ url_for('login') }}" method="POST">
             <div class="mb-3">
                 <input type="email" class="form-control" id="email" name="email" placeholder="Email address">

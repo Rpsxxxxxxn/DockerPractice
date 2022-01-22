@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="card mx-auto my-5" style="max-width:350px">
+    <h5 class="card-header">投稿</h5>
+    <div class="card-body">
+        <form action="{{ url_for('post') }}" method="POST">
+            <div class="mb-3">
+                <textarea class="form-control" id="post" rows="3" name="comment"></textarea>
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">ポスト</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
