@@ -36,6 +36,15 @@ CREATE TABLE IF NOT EXISTS post_info (
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 投稿項目画像用
+CREATE TABLE IF NOT EXISTS post_image_info (
+    id INT(11) PRIMARY KEY,
+    post_id INT(11) NOT NULL,
+    image_name VARCHAR(255) NOT NULL,
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+)
+
 -- 投稿ライク機能
 CREATE TABLE IF NOT EXISTS post_like (
     email VARCHAR(255) NOT NULL,

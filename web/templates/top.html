@@ -1,20 +1,29 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="card mx-auto my-2" style="max-width: 50rem;">
-    <ul class="list-group list-group-flush">
+<div class="container mx-auto my-2" style="max-width: 50rem;">
+    <!-- <ul class="list-group list-group-flush"> -->
         {% for count in range(list_data | length) %}
-        <li class="list-group-item">
-            <div class="card">
+        <!-- <li class="list-group-item"> -->
+            <div class="card mb-3">
                 <h5 class="card-header">
                     {{ list_data[count][0] }}
-                    ({{ list_data[count][1] }})
+                    
                 </h5>
                 <div class="card-body">
                     {{ list_data[count][2] }}
                 </div>
+
+                <div class="mx-auto" style="width: 20rem;">
+                    <img src="https://jp.ign.com/apexlegends/img/illust4.jpg" class="card-img-bottom" alt="...">
+                    <img src="https://whomor.com/wp-content/themes/TANDEN/game-illustration/images/img_main_whomor.png" class="card-img-bottom" alt="...">
+                </div>
+
+                <div class="card-footer text-muted">
+                    投稿日({{ list_data[count][1] }})
+                </div>
               </div>
-        </li>
+        <!-- </li> -->
         {% endfor %}
-    </ul>
+    <!-- </ul> -->
 </div>
 {% endblock %}

@@ -163,6 +163,7 @@ def post():
     return render_template("post.html")
   elif request.method == "POST":
     if "user" in session:
+      stream = request.files['img'].stream
       comment = request.form.get("comment")
       try:
         conn = mysql.connector.connect(**db_config)
